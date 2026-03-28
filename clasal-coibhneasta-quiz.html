@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ga">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An Clásal Coibhneasta</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap');
+  :root{--bg:#0e0e12;--panel:#16161e;--card:#1c1c28;--border:#2e2e3e;--gold:#c9a84c;--goldl:#e8c97a;--teal:#4ab8b8;--red:#d96060;--green:#5bbf8a;--text:#d8d4cc;--muted:#7a7a90;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Lato',sans-serif;font-weight:300;min-height:100vh;padding-bottom:60px;}
+  header{background:linear-gradient(135deg,#0e0e12,#1a1a2a);border-bottom:1px solid var(--border);padding:28px 24px 20px;text-align:center;}
+  header h1{font-family:'IM Fell English',serif;font-size:2.1rem;color:var(--gold);margin-bottom:4px;}
+  header p{color:var(--muted);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;}
+  nav.tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);overflow-x:auto;}
+  nav.tabs button{flex:1;min-width:95px;padding:14px 8px;background:transparent;border:none;border-bottom:3px solid transparent;color:var(--muted);font-family:'Lato',sans-serif;font-size:.77rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;}
+  nav.tabs button:hover{color:var(--text);}
+  nav.tabs button.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .tab-content{display:none;padding:28px 20px;max-width:820px;margin:0 auto;}
+  .tab-content.active{display:block;}
+  /* notes */
+  .ns{margin-bottom:32px;}
+  .ns h2{font-family:'IM Fell English',serif;color:var(--gold);font-size:1.3rem;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .ns h3{color:var(--teal);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px;}
+  .ns p{line-height:1.75;font-size:.93rem;margin-bottom:10px;}
+  .rb{background:var(--card);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 6px 6px 0;margin:10px 0;font-size:.91rem;line-height:1.7;}
+  .rb .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:4px;}
+  .rb.ind{border-left-color:var(--teal);} .rb.ind .lbl{color:var(--teal);}
+  .rb.neg{border-left-color:var(--red);} .rb.neg .lbl{color:var(--red);}
+  table.rt{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:12px;}
+  table.rt th{background:#1e1e2c;color:var(--gold);padding:9px 12px;text-align:left;font-weight:700;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;}
+  table.rt td{padding:9px 12px;border-bottom:1px solid var(--border);}
+  table.rt tr:hover td{background:rgba(255,255,255,.02);}
+  .ga{color:var(--goldl);font-style:italic;} .en{color:var(--muted);}
+  .tag{display:inline-block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-right:4px;font-weight:700;}
+  .td{background:#3a5c8a;color:#8ab8f0;} .ti{background:#5a3a8a;color:#c0a0f0;} .tn{background:#7a3a3a;color:#f08080;}
+  hr.dv{border:none;border-top:1px solid var(--border);margin:28px 0;}
+  /* quiz shared */
+  .sh{margin-bottom:24px;} .sh h2{font-family:'IM Fell English',serif;color:var(--gold);font-size:1.25rem;margin-bottom:4px;} .sh p{color:var(--muted);font-size:.85rem;}
+  .sbh{font-family:'IM Fell English',serif;color:var(--teal);font-size:1.05rem;margin:28px 0 14px;padding-top:16px;border-top:1px solid var(--border);}
+  .sbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);padding:10px 16px;border-radius:8px;margin-bottom:24px;font-size:.85rem;flex-wrap:wrap;}
+  .sbar span{color:var(--muted);} .sbar strong{color:var(--gold);font-size:1.05rem;}
+  .pdots{display:flex;flex-wrap:wrap;gap:5px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:background .3s;}
+  .dot.ok{background:var(--green);} .dot.no{background:var(--red);}
+  .qc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px;transition:border-color .2s;}
+  .qc.correct{border-color:var(--green);} .qc.incorrect{border-color:var(--red);}
+  .qn{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;}
+  .qs{font-size:1rem;margin-bottom:14px;line-height:1.7;}
+  .qs .sa{color:var(--goldl);font-style:italic;} .qs .sb{color:var(--teal);font-style:italic;}
+  .hint{font-size:.78rem;color:var(--muted);margin-bottom:10px;font-style:italic;}
+  .mco{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .mb{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.88rem;transition:all .15s;}
+  .mb:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+  .mb.ca{border-color:var(--green)!important;color:var(--green)!important;background:rgba(91,191,138,.12)!important;}
+  .mb.wa{border-color:var(--red)!important;color:var(--red)!important;background:rgba(217,96,96,.1)!important;}
+  .mb:disabled{cursor:default;opacity:.85;}
+  .tir{display:flex;gap:8px;margin-bottom:8px;}
+  .tir input{flex:1;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:6px;font-family:'Lato',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+  .tir input:focus{border-color:var(--gold);}
+  .tir input.ci{border-color:var(--green)!important;} .tir input.ii{border-color:var(--red)!important;}
+  .bck{background:var(--gold);color:#0e0e12;border:none;padding:10px 18px;border-radius:6px;font-family:'Lato',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:background .2s;white-space:nowrap;}
+  .bck:hover{background:var(--goldl);} .bck:disabled{opacity:.4;cursor:default;}
+  .fb{font-size:.85rem;margin-top:8px;min-height:20px;line-height:1.5;}
+  .fb.ok{color:var(--green);} .fb.no{color:var(--red);}
+  .ar{margin-top:8px;font-size:.85rem;color:var(--muted);display:none;line-height:1.6;}
+  .ar.show{display:block;} .ar span{color:var(--goldl);font-style:italic;}
+  .pb{display:inline-block;border-bottom:2px solid var(--gold);min-width:40px;text-align:center;color:var(--goldl);font-style:italic;padding:0 4px;}
+  .rb-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 18px;border-radius:6px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.8rem;margin-top:10px;transition:all .2s;}
+  .rb-btn:hover{border-color:var(--muted);color:var(--text);}
+  /* translate */
+  .trc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+  .tren{font-size:1rem;margin-bottom:12px;line-height:1.6;}
+  .trvb{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:7px 16px;border-radius:6px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.82rem;letter-spacing:.06em;transition:all .2s;}
+  .trvb:hover{background:rgba(201,168,76,.1);}
+  .trva{display:none;margin-top:12px;padding:12px 14px;background:rgba(201,168,76,.07);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;font-style:italic;color:var(--goldl);line-height:1.7;font-size:.93rem;}
+  .trva.show{display:block;}
+  .trn{margin-top:6px;font-size:.8rem;color:var(--muted);font-style:normal;}
+</style>
+</head>
+<body>
+<header>
+  <h1>An Clásal Coibhneasta</h1>
+  <p>The Relative Clause · Notes, Exercises &amp; Translation</p>
+</header>
+<nav class="tabs">
+  <button class="active" onclick="showTab('notes',this)">📖 Notes</button>
+  <button onclick="showTab('identify',this)">🔍 Identify</button>
+  <button onclick="showTab('particle',this)">🧩 Particle</button>
+  <button onclick="showTab('buildit',this)">✍️ Build It</button>
+  <button onclick="showTab('translate',this)">🔤 Translate</button>
+</nav>
+
+<!-- NOTES -->
+<div id="notes" class="tab-content active">
+  <div class="ns">
+    <h2>What is the Relative Clause?</h2>
+    <p>A relative clause qualifies a noun — like an adjective, giving extra information. The noun being described is the <strong>réamhtheachtaí</strong> (antecedent). The connecting word is the <strong>mír choibhneasta</strong> (relative particle). The key is whether the clause is <strong>direct</strong> or <strong>indirect</strong>.</p>
+  </div>
+  <hr class="dv">
+  <div class="ns">
+    <h2>Direct vs Indirect</h2>
+    <h3>Direct <span class="tag td">DÍREACH</span></h3>
+    <p>Antecedent is the <strong>subject</strong> or <strong>direct object</strong> of the verb — nothing is "left over".</p>
+    <div class="rb"><div class="lbl">English test</div>No leftover pronoun → DIRECT<br>✓ "the man <em>who</em> sings" · "the book <em>that</em> I read"</div>
+    <div class="rb"><div class="lbl">Present / future</div>antecedent + <strong>a</strong> + SÉIMHIÚ<br><span class="ga">an duine a fheicim</span> — <span class="en">the person I see</span><br><span class="ga">an bia atá réidh</span> — <span class="en">the food that is ready</span> (tá → atá)</div>
+    <div class="rb"><div class="lbl">Past — regular</div>antecedent + <strong>a</strong> + SÉIMHIÚ<br><span class="ga">na ceoltóirí a bhain an chéad duais</span></div>
+    <div class="rb"><div class="lbl">Ulster/Connacht endings</div>Present: <strong>-(e)as / -(e)anns</strong> · Future: <strong>-f(e)as</strong><br><span class="ga">an duine a mholas · an múinteoir a fheicfeas tú · bheas</span> (= relative of beidh)</div>
+    <h3>Indirect <span class="tag ti">INDÍREACH</span></h3>
+    <p>Antecedent connected to the verb through a <strong>preposition</strong> or through <strong>possession</strong> — there is always a leftover pronoun/possessive.</p>
+    <div class="rb ind"><div class="lbl">English test</div>Leftover pronoun → INDIRECT<br>✓ "the house where I live <em>in it</em>" · "the man <em>whose</em> son is in Australia"</div>
+    <div class="rb ind"><div class="lbl">Present / future</div>antecedent + <strong>a</strong> + URÚ + leftover<br><span class="ga">an teach a bhfanaim ann · an bhean a bhfuil a mac san Astráil</span></div>
+    <div class="rb ind"><div class="lbl">Past — regular</div>antecedent + <strong>ar</strong> + SÉIMHIÚ + leftover<br><span class="ga">an teach ar fhan mé ann · na daoine ar bhuaigh a bpáiste an chéad duais</span></div>
+    <div class="rb ind"><div class="lbl">Past — irregular</div>antecedent + <strong>a</strong> + URÚ + leftover<br><span class="ga">an teach a raibh siad ann · an fear a bhfaca Seán a charr</span></div>
+  </div>
+  <hr class="dv">
+  <div class="ns">
+    <h2>Negative Forms <span class="tag tn">DIÚLTACH</span></h2>
+    <table class="rt">
+      <tr><th>Type</th><th>Tense</th><th>Particle + Mutation</th><th>Example</th></tr>
+      <tr><td><span class="tag td">Direct</span></td><td>Present</td><td><strong>nach</strong> + urú</td><td><span class="ga">an bia nach n-ithim</span></td></tr>
+      <tr><td><span class="tag td">Direct</span></td><td>Past regular</td><td><strong>nár</strong> + séimhiú</td><td><span class="ga">nár cheannaigh na leabhair</span></td></tr>
+      <tr><td><span class="tag td">Direct</span></td><td>Past irregular</td><td><strong>nach</strong> + urú</td><td><span class="ga">nach bhfaca mé</span></td></tr>
+      <tr><td><span class="tag ti">Indirect</span></td><td>Present</td><td><strong>nach</strong> + urú</td><td><span class="ga">an teach nach bhfanaim ann</span></td></tr>
+      <tr><td><span class="tag ti">Indirect</span></td><td>Past regular</td><td><strong>nár</strong> + séimhiú</td><td><span class="ga">an teach nár fhan mé ann</span></td></tr>
+      <tr><td><span class="tag ti">Indirect</span></td><td>Past irregular</td><td><strong>nach</strong> + urú</td><td><span class="ga">an teach nach raibh siad ann</span></td></tr>
+    </table>
+  </div>
+  <hr class="dv">
+  <div class="ns">
+    <h2>Particle Quick Reference</h2>
+    <table class="rt">
+      <tr><th>Situation</th><th>Particle</th><th>Mutation</th></tr>
+      <tr><td>Direct positive (any tense)</td><td><strong class="ga">a</strong></td><td>Séimhiú</td></tr>
+      <tr><td>Indirect positive — present/future</td><td><strong class="ga">a</strong></td><td>Urú</td></tr>
+      <tr><td>Indirect positive — past regular</td><td><strong class="ga">ar</strong></td><td>Séimhiú</td></tr>
+      <tr><td>Indirect positive — past irregular</td><td><strong class="ga">a</strong></td><td>Urú</td></tr>
+      <tr><td>Direct/Indirect negative — present</td><td><strong class="ga">nach</strong></td><td>Urú</td></tr>
+      <tr><td>Direct/Indirect negative — past regular</td><td><strong class="ga">nár</strong></td><td>Séimhiú</td></tr>
+      <tr><td>Direct/Indirect negative — past irregular</td><td><strong class="ga">nach</strong></td><td>Urú</td></tr>
+    </table>
+    <div class="rb" style="margin-top:16px"><div class="lbl">Copula in relative clauses</div>
+    Direct: is/ba/nár(bh) unchanged. Ba → ab before vowel/fh.<br>
+    Indirect: <strong>ar</strong> replaces is: <span class="ga">an duine ar leis an carr · an cailín ar mhaith liom labhairt léi</span></div>
+  </div>
+  <hr class="dv">
+  <div class="ns">
+    <h2>Trigger Words</h2>
+    <h3>DIRECT</h3><p style="font-size:.88rem;color:var(--muted)"><span class="ga">cad, cé, cathain, cá fhad, cé mhéad, cén uair, conas, cad é mar, nuair</span></p>
+    <h3>INDIRECT</h3><p style="font-size:.88rem;color:var(--muted)"><span class="ga">cén áit / cá háit / an áit, cén chaoi / an chaoi, cén fáth / an fáth, an dóigh / cén dóigh, cad chuige, an tslí / cén tslí, mar</span> (= where)</p>
+  </div>
+</div>
+
+<!-- IDENTIFY -->
+<div id="identify" class="tab-content">
+  <div class="sh"><h2>Section 1: Identify the Type</h2><p>What type of relative clause joins the two sentences?</p></div>
+  <div class="sbar"><span>Score:</span><strong id="identify-score">0 / 10</strong>
+    <div class="pdots">
+      <div class="dot" id="identify-d1"></div><div class="dot" id="identify-d2"></div><div class="dot" id="identify-d3"></div><div class="dot" id="identify-d4"></div><div class="dot" id="identify-d5"></div>
+      <div class="dot" id="identify-d6"></div><div class="dot" id="identify-d7"></div><div class="dot" id="identify-d8"></div><div class="dot" id="identify-d9"></div><div class="dot" id="identify-d10"></div>
+    </div>
+  </div>
+
+  <div class="qc" id="iq1"><div class="qn">1 / 10</div>
+    <div class="qs"><span class="sa">Seo fear.</span> + <span class="sb">Tá sé feargach.</span></div>
+    <div class="hint">He is the subject of tá sé feargach.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq1','Direct','Direct','identify',1)">Direct</button>
+      <button class="mb" onclick="checkMC('iq1','Indirect (prep)','Direct','identify',1)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq1','Indirect (genitive)','Direct','identify',1)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq1-fb"></div>
+    <div class="ar" id="iq1-rev">Answer: <span>Seo é an fear <strong>atá</strong> feargach.</span> — direct: a + tá → atá</div>
+  </div>
+
+  <div class="qc" id="iq2"><div class="qn">2 / 10</div>
+    <div class="qs"><span class="sa">Seo bean.</span> + <span class="sb">Tá aithne agam <u>uirthi</u>.</span></div>
+    <div class="hint">"uirthi" (on/about her) is a prepositional pronoun referring back to the woman.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq2','Direct','Indirect (prep)','identify',2)">Direct</button>
+      <button class="mb" onclick="checkMC('iq2','Indirect (prep)','Indirect (prep)','identify',2)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq2','Indirect (genitive)','Indirect (prep)','identify',2)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq2-fb"></div>
+    <div class="ar" id="iq2-rev">Answer: <span>Seo í an bhean <strong>a bhfuil</strong> aithne agam <strong>uirthi</strong>.</span> — indirect prep, present: a + urú</div>
+  </div>
+
+  <div class="qc" id="iq3"><div class="qn">3 / 10</div>
+    <div class="qs"><span class="sa">Sin fear.</span> + <span class="sb">Tá fearg <u>air</u>.</span></div>
+    <div class="hint">"air" = on him. He is not the subject — anger is on him.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq3','Direct','Indirect (prep)','identify',3)">Direct</button>
+      <button class="mb" onclick="checkMC('iq3','Indirect (prep)','Indirect (prep)','identify',3)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq3','Indirect (genitive)','Indirect (prep)','identify',3)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq3-fb"></div>
+    <div class="ar" id="iq3-rev">Answer: <span>Sin é an fear <strong>a bhfuil</strong> fearg <strong>air</strong>.</span> — indirect prep, present: a + urú</div>
+  </div>
+
+  <div class="qc" id="iq4"><div class="qn">4 / 10</div>
+    <div class="qs"><span class="sa">Tá páistí ag an doras.</span> + <span class="sb">Oibríonn <u>a máthair</u> i monarcha.</span></div>
+    <div class="hint">"a máthair" = whose mother? The children's. Possession involved.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq4','Direct','Indirect (genitive)','identify',4)">Direct</button>
+      <button class="mb" onclick="checkMC('iq4','Indirect (prep)','Indirect (genitive)','identify',4)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq4','Indirect (genitive)','Indirect (genitive)','identify',4)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq4-fb"></div>
+    <div class="ar" id="iq4-rev">Answer: <span>Sin iad na páistí <strong>a n-oibríonn</strong> a máthair i monarcha.</span> — indirect genitive, present: a + urú</div>
+  </div>
+
+  <div class="qc" id="iq5"><div class="qn">5 / 10</div>
+    <div class="qs"><span class="sa">Sin iad na ceoltóirí.</span> + <span class="sb">Bhain <u>siad</u> an chéad duais sa chomórtas.</span></div>
+    <div class="hint">They themselves won — siad = subject of bhain.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq5','Direct','Direct','identify',5)">Direct</button>
+      <button class="mb" onclick="checkMC('iq5','Indirect (prep)','Direct','identify',5)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq5','Indirect (genitive)','Direct','identify',5)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq5-fb"></div>
+    <div class="ar" id="iq5-rev">Answer: <span>Sin iad na ceoltóirí <strong>a bhain</strong> an chéad duais sa chomórtas.</span> — direct, past regular: a + séimhiú</div>
+  </div>
+
+  <div class="qc" id="iq6"><div class="qn">6 / 10</div>
+    <div class="qs"><span class="sa">Sin é an fear.</span> + <span class="sb">Chonaic Seán <u>a charr</u> sa chlós.</span></div>
+    <div class="hint">"a charr" = his car. Whose car? The man's. Past tense, irregular verb.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq6','Direct','Indirect (genitive)','identify',6)">Direct</button>
+      <button class="mb" onclick="checkMC('iq6','Indirect (prep)','Indirect (genitive)','identify',6)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq6','Indirect (genitive)','Indirect (genitive)','identify',6)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq6-fb"></div>
+    <div class="ar" id="iq6-rev">Answer: <span>Sin é an fear <strong>a bhfaca</strong> Seán <strong>a charr</strong> sa chlós.</span> — indirect genitive, past irregular: a + urú</div>
+  </div>
+
+  <div class="qc" id="iq7"><div class="qn">7 / 10</div>
+    <div class="qs"><span class="sa">An é sin an gasúr?</span> + <span class="sb">Faigheann <u>sé</u> na páipéir gach maidin.</span></div>
+    <div class="hint">He = subject of faigheann — he fetches the papers.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq7','Direct','Direct','identify',7)">Direct</button>
+      <button class="mb" onclick="checkMC('iq7','Indirect (prep)','Direct','identify',7)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq7','Indirect (genitive)','Direct','identify',7)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq7-fb"></div>
+    <div class="ar" id="iq7-rev">Answer: <span>An é sin an gasúr <strong>a fhaigheann</strong> na páipéir gach maidin?</span> — direct, present: a + séimhiú</div>
+  </div>
+
+  <div class="qc" id="iq8"><div class="qn">8 / 10</div>
+    <div class="qs"><span class="sa">Sin obair.</span> + <span class="sb">Ní bheidh <u>a toradh</u> le feiceáil go ceann i bhfad.</span></div>
+    <div class="hint">"a toradh" = its result/fruit. Whose result? The work's. Possession.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq8','Direct','Indirect (genitive)','identify',8)">Direct</button>
+      <button class="mb" onclick="checkMC('iq8','Indirect (prep)','Indirect (genitive)','identify',8)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq8','Indirect (genitive)','Indirect (genitive)','identify',8)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq8-fb"></div>
+    <div class="ar" id="iq8-rev">Answer: <span>Sin obair <strong>nach mbeidh</strong> a toradh le feiceáil go ceann i bhfad.</span> — indirect genitive, negative future: nach + urú</div>
+  </div>
+
+  <div class="qc" id="iq9"><div class="qn">9 / 10</div>
+    <div class="qs"><span class="sa">Sin iad na daoine.</span> + <span class="sb">Chuaigh mé ar ollscoil <u>ina dteannta</u>.</span></div>
+    <div class="hint">"ina dteannta" = in their company — a prepositional phrase referring back to the people.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq9','Direct','Indirect (prep)','identify',9)">Direct</button>
+      <button class="mb" onclick="checkMC('iq9','Indirect (prep)','Indirect (prep)','identify',9)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq9','Indirect (genitive)','Indirect (prep)','identify',9)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq9-fb"></div>
+    <div class="ar" id="iq9-rev">Answer: <span>Sin iad na daoine <strong>a ndeachaigh</strong> mé ar ollscoil <strong>ina dteannta</strong>.</span> — indirect prep, past irregular: a + urú</div>
+  </div>
+
+  <div class="qc" id="iq10"><div class="qn">10 / 10</div>
+    <div class="qs"><span class="sa">Sin an fear.</span> + <span class="sb">Bhí <u>a mhac</u> san otharlann.</span></div>
+    <div class="hint">"a mhac" = his son. Whose son? The man's. Past, irregular verb bhí.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('iq10','Direct','Indirect (genitive)','identify',10)">Direct</button>
+      <button class="mb" onclick="checkMC('iq10','Indirect (prep)','Indirect (genitive)','identify',10)">Indirect (prep)</button>
+      <button class="mb" onclick="checkMC('iq10','Indirect (genitive)','Indirect (genitive)','identify',10)">Indirect (genitive)</button>
+    </div>
+    <div class="fb" id="iq10-fb"></div>
+    <div class="ar" id="iq10-rev">Answer: <span>Sin é an fear <strong>a raibh</strong> a mhac san otharlann.</span> — indirect genitive, past irregular: a + urú (raibh)</div>
+  </div>
+  <button class="rb-btn" onclick="resetSection('identify')">↺ Reset</button>
+</div>
+
+<!-- PARTICLE -->
+<div id="particle" class="tab-content">
+  <div class="sh"><h2>Section 2: Choose the Particle</h2><p>Select the correct relative particle and mutation for each blank.</p></div>
+  <div class="sbar"><span>Score:</span><strong id="particle-score">0 / 7</strong>
+    <div class="pdots">
+      <div class="dot" id="particle-d1"></div><div class="dot" id="particle-d2"></div><div class="dot" id="particle-d3"></div><div class="dot" id="particle-d4"></div>
+      <div class="dot" id="particle-d5"></div><div class="dot" id="particle-d6"></div><div class="dot" id="particle-d7"></div>
+    </div>
+  </div>
+
+  <div class="qc" id="pq1"><div class="qn">1 / 7</div>
+    <div class="qs">an duine <span class="pb">___</span> fheiceann mé</div>
+    <div class="hint">Direct positive present — "the person I see". Antecedent = direct object.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq1','a + séimhiú','a + séimhiú','particle',1)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq1','a + urú','a + séimhiú','particle',1)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq1','ar + séimhiú','a + séimhiú','particle',1)">ar + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq1','nach + urú','a + séimhiú','particle',1)">nach + urú</button>
+    </div>
+    <div class="fb" id="pq1-fb"></div>
+    <div class="ar" id="pq1-rev">Answer: <span>an duine <strong>a fh</strong>eiceann mé</span> — direct positive present: <strong>a</strong> + séimhiú (f → fh)</div>
+  </div>
+
+  <div class="qc" id="pq2"><div class="qn">2 / 7</div>
+    <div class="qs">an teach <span class="pb">___</span> raibh siad ina gcónaí <u>ann</u></div>
+    <div class="hint">Indirect prepositional ("ann"), past — raibh is the past irregular form of bí.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq2','a + séimhiú','a + urú','particle',2)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq2','a + urú','a + urú','particle',2)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq2','ar + séimhiú','a + urú','particle',2)">ar + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq2','nach + urú','a + urú','particle',2)">nach + urú</button>
+    </div>
+    <div class="fb" id="pq2-fb"></div>
+    <div class="ar" id="pq2-rev">Answer: <span>an teach <strong>a raibh</strong> siad ina gcónaí ann</span> — indirect past irregular: <strong>a</strong> + urú (r does not visibly change; raibh is the dependent form)</div>
+  </div>
+
+  <div class="qc" id="pq3"><div class="qn">3 / 7</div>
+    <div class="qs">an bia <span class="pb">___</span> n-ithim</div>
+    <div class="hint">Direct, negative, present — "the food I don't eat".</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq3','a + séimhiú','nach + urú','particle',3)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq3','a + urú','nach + urú','particle',3)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq3','nach + urú','nach + urú','particle',3)">nach + urú</button>
+      <button class="mb" onclick="checkMC('pq3','nár + séimhiú','nach + urú','particle',3)">nár + séimhiú</button>
+    </div>
+    <div class="fb" id="pq3-fb"></div>
+    <div class="ar" id="pq3-rev">Answer: <span>an bia <strong>nach n-</strong>ithim</span> — direct negative present: <strong>nach</strong> + urú (i → n-i)</div>
+  </div>
+
+  <div class="qc" id="pq4"><div class="qn">4 / 7</div>
+    <div class="qs">an mac léinn <span class="pb">___</span> cheannaigh na leabhair</div>
+    <div class="hint">Direct, negative, past — regular verb "ceannaigh" — "who didn't buy the books".</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq4','a + séimhiú','nár + séimhiú','particle',4)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq4','nach + urú','nár + séimhiú','particle',4)">nach + urú</button>
+      <button class="mb" onclick="checkMC('pq4','nár + séimhiú','nár + séimhiú','particle',4)">nár + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq4','ar + séimhiú','nár + séimhiú','particle',4)">ar + séimhiú</button>
+    </div>
+    <div class="fb" id="pq4-fb"></div>
+    <div class="ar" id="pq4-rev">Answer: <span>an mac léinn <strong>nár ch</strong>eannaigh na leabhair</span> — direct negative past regular: <strong>nár</strong> + séimhiú</div>
+  </div>
+
+  <div class="qc" id="pq5"><div class="qn">5 / 7</div>
+    <div class="qs">Sin í an bhean <span class="pb">___</span> fhan siad <u>léi</u>.</div>
+    <div class="hint">Indirect prepositional ("léi" = with her), past — regular verb "fan".</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq5','a + urú','ar + séimhiú','particle',5)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq5','ar + séimhiú','ar + séimhiú','particle',5)">ar + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq5','nach + urú','ar + séimhiú','particle',5)">nach + urú</button>
+      <button class="mb" onclick="checkMC('pq5','nár + séimhiú','ar + séimhiú','particle',5)">nár + séimhiú</button>
+    </div>
+    <div class="fb" id="pq5-fb"></div>
+    <div class="ar" id="pq5-rev">Answer: <span>Sin í an bhean <strong>ar fh</strong>an siad léi.</span> — indirect past regular: <strong>ar</strong> + séimhiú (fan → fhan)</div>
+  </div>
+
+  <div class="qc" id="pq6"><div class="qn">6 / 7</div>
+    <div class="qs">Sin iad na daoine <span class="pb">___</span> bhuaigh <u>a bpáiste</u> an chéad duais.</div>
+    <div class="hint">Indirect genitive ("a bpáiste" = their child), past — regular verb "buaigh".</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq6','a + urú','ar + séimhiú','particle',6)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq6','a + séimhiú','ar + séimhiú','particle',6)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq6','ar + séimhiú','ar + séimhiú','particle',6)">ar + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq6','nach + urú','ar + séimhiú','particle',6)">nach + urú</button>
+    </div>
+    <div class="fb" id="pq6-fb"></div>
+    <div class="ar" id="pq6-rev">Answer: <span>Sin iad na daoine <strong>ar bh</strong>uaigh a bpáiste an chéad duais.</span> — indirect genitive past regular: <strong>ar</strong> + séimhiú</div>
+  </div>
+
+  <div class="qc" id="pq7"><div class="qn">7 / 7</div>
+    <div class="qs">Sin í an bhean <span class="pb">___</span> bhfuil <u>a mac</u> san Astráil.</div>
+    <div class="hint">Indirect genitive ("a mac" = her son), present tense.</div>
+    <div class="mco">
+      <button class="mb" onclick="checkMC('pq7','a + séimhiú','a + urú','particle',7)">a + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq7','a + urú','a + urú','particle',7)">a + urú</button>
+      <button class="mb" onclick="checkMC('pq7','ar + séimhiú','a + urú','particle',7)">ar + séimhiú</button>
+      <button class="mb" onclick="checkMC('pq7','nach + urú','a + urú','particle',7)">nach + urú</button>
+    </div>
+    <div class="fb" id="pq7-fb"></div>
+    <div class="ar" id="pq7-rev">Answer: <span>Sin í an bhean <strong>a bh</strong>fuil a mac san Astráil.</span> — indirect genitive present: <strong>a</strong> + urú (fuil → bhfuil)</div>
+  </div>
+  <button class="rb-btn" onclick="resetSection('particle')">↺ Reset</button>
+</div>
+
+<!-- BUILD IT -->
+<div id="buildit" class="tab-content">
+  <div class="sh"><h2>Section 3: Build It</h2><p>Combine the two sentences using the correct relative clause. Type your answer — accents optional.</p></div>
+  <div class="sbar"><span>Score:</span><strong id="buildit-score">0 / 14</strong>
+    <div class="pdots">
+      <div class="dot" id="buildit-d1"></div><div class="dot" id="buildit-d2"></div><div class="dot" id="buildit-d3"></div><div class="dot" id="buildit-d4"></div><div class="dot" id="buildit-d5"></div><div class="dot" id="buildit-d6"></div><div class="dot" id="buildit-d7"></div>
+      <div class="dot" id="buildit-d8"></div><div class="dot" id="buildit-d9"></div><div class="dot" id="buildit-d10"></div><div class="dot" id="buildit-d11"></div><div class="dot" id="buildit-d12"></div><div class="dot" id="buildit-d13"></div><div class="dot" id="buildit-d14"></div>
+    </div>
+  </div>
+
+  <p class="sbh">Ó Chleachtadh 1</p>
+
+  <div class="qc" id="bq1"><div class="qn">1 / 14</div>
+    <div class="qs"><span class="sa">Sin iad na ceoltóirí.</span><br><span class="sb">Bhain siad an chéad duais sa chomórtas.</span></div>
+    <div class="hint">Direct, past regular — siad = subject of bhain.</div>
+    <div class="tir"><input type="text" id="bq1-in" placeholder="Sin iad na ceoltóirí a..." onkeydown="if(event.key==='Enter')checkText('bq1','buildit',1)"><button class="bck" onclick="checkText('bq1','buildit',1)">Seiceáil</button></div>
+    <div class="fb" id="bq1-fb"></div><div class="ar" id="bq1-rev">Answer: <span>Sin iad na ceoltóirí <strong>a bhain</strong> an chéad duais sa chomórtas.</span></div>
+  </div>
+
+  <div class="qc" id="bq2"><div class="qn">2 / 14</div>
+    <div class="qs"><span class="sa">Chonaic mé an siopa.</span><br><span class="sb">Bíonn Micheál ag obair <u>ann</u>.</span></div>
+    <div class="hint">Indirect prep ("ann"), present — a + urú on bíonn.</div>
+    <div class="tir"><input type="text" id="bq2-in" placeholder="Chonaic mé an siopa a..." onkeydown="if(event.key==='Enter')checkText('bq2','buildit',2)"><button class="bck" onclick="checkText('bq2','buildit',2)">Seiceáil</button></div>
+    <div class="fb" id="bq2-fb"></div><div class="ar" id="bq2-rev">Answer: <span>Chonaic mé an siopa <strong>a mbíonn</strong> Micheál ag obair <strong>ann</strong>.</span></div>
+  </div>
+
+  <div class="qc" id="bq3"><div class="qn">3 / 14</div>
+    <div class="qs"><span class="sa">Sin í an bhean.</span><br><span class="sb">Tá mo dheirfiúr ina cónaí <u>léi</u>.</span></div>
+    <div class="hint">Indirect prep ("léi"), present — a + urú on fuil.</div>
+    <div class="tir"><input type="text" id="bq3-in" placeholder="Sin í an bhean a..." onkeydown="if(event.key==='Enter')checkText('bq3','buildit',3)"><button class="bck" onclick="checkText('bq3','buildit',3)">Seiceáil</button></div>
+    <div class="fb" id="bq3-fb"></div><div class="ar" id="bq3-rev">Answer: <span>Sin í an bhean <strong>a bhfuil</strong> mo dheirfiúr ina cónaí <strong>léi</strong>.</span></div>
+  </div>
+
+  <div class="qc" id="bq4"><div class="qn">4 / 14</div>
+    <div class="qs"><span class="sa">Sin í m'aintín.</span><br><span class="sb">Ní fheicim rómhinic <u>í</u>.</span></div>
+    <div class="hint">Direct negative present — "whom I don't often see". Drop the final í.</div>
+    <div class="tir"><input type="text" id="bq4-in" placeholder="Sin í m'aintín nach..." onkeydown="if(event.key==='Enter')checkText('bq4','buildit',4)"><button class="bck" onclick="checkText('bq4','buildit',4)">Seiceáil</button></div>
+    <div class="fb" id="bq4-fb"></div><div class="ar" id="bq4-rev">Answer: <span>Sin í m'aintín <strong>nach bhfeicim</strong> rómhinic.</span> — nach + urú (feicim → bhfeicim)</div>
+  </div>
+
+  <div class="qc" id="bq5"><div class="qn">5 / 14</div>
+    <div class="qs"><span class="sa">Sin é an fear.</span><br><span class="sb">Chonaic Seán <u>a charr</u> sa chlós.</span></div>
+    <div class="hint">Indirect genitive ("a charr" = his car), past irregular — chonaic (dependent: faca).</div>
+    <div class="tir"><input type="text" id="bq5-in" placeholder="Sin é an fear a..." onkeydown="if(event.key==='Enter')checkText('bq5','buildit',5)"><button class="bck" onclick="checkText('bq5','buildit',5)">Seiceáil</button></div>
+    <div class="fb" id="bq5-fb"></div><div class="ar" id="bq5-rev">Answer: <span>Sin é an fear <strong>a bhfaca</strong> Seán <strong>a charr</strong> sa chlós.</span> — a + urú (faca → bhfaca)</div>
+  </div>
+
+  <div class="qc" id="bq6"><div class="qn">6 / 14</div>
+    <div class="qs"><span class="sa">Sin fear.</span><br><span class="sb">Bhíodh <u>a bhean chéile</u> i bhfeighil an tsiopa tráth.</span></div>
+    <div class="hint">Indirect genitive ("a bhean chéile" = his wife), habitual past irregular — bíodh.</div>
+    <div class="tir"><input type="text" id="bq6-in" placeholder="Sin é an fear a..." onkeydown="if(event.key==='Enter')checkText('bq6','buildit',6)"><button class="bck" onclick="checkText('bq6','buildit',6)">Seiceáil</button></div>
+    <div class="fb" id="bq6-fb"></div><div class="ar" id="bq6-rev">Answer: <span>Sin é an fear <strong>a mbíodh</strong> a bhean chéile i bhfeighil an tsiopa tráth.</span> — a + urú (bíodh → mbíodh)</div>
+  </div>
+
+  <p class="sbh">Cleachtadh 2 — Cuid A</p>
+
+  <div class="qc" id="bq7"><div class="qn">7 / 14</div>
+    <div class="qs"><span class="sa">An é sin an gasúr?</span><br><span class="sb">Faigheann sé na páipéir gach maidin.</span></div>
+    <div class="hint">Direct positive present — he = subject of faigheann.</div>
+    <div class="tir"><input type="text" id="bq7-in" placeholder="An é sin an gasúr a..." onkeydown="if(event.key==='Enter')checkText('bq7','buildit',7)"><button class="bck" onclick="checkText('bq7','buildit',7)">Seiceáil</button></div>
+    <div class="fb" id="bq7-fb"></div><div class="ar" id="bq7-rev">Answer: <span>An é sin an gasúr <strong>a fhaigheann</strong> na páipéir gach maidin?</span> — a + séimhiú (f → fh)</div>
+  </div>
+
+  <div class="qc" id="bq8"><div class="qn">8 / 14</div>
+    <div class="qs"><span class="sa">Cén uair?</span><br><span class="sb">Tiocfaidh sí inniu.</span></div>
+    <div class="hint">"Cén uair" triggers a DIRECT relative clause. Future tense.</div>
+    <div class="tir"><input type="text" id="bq8-in" placeholder="Cén uair a..." onkeydown="if(event.key==='Enter')checkText('bq8','buildit',8)"><button class="bck" onclick="checkText('bq8','buildit',8)">Seiceáil</button></div>
+    <div class="fb" id="bq8-fb"></div><div class="ar" id="bq8-rev">Answer: <span>Cén uair <strong>a thiocfaidh</strong> sí inniu?</span> — direct future: a + séimhiú (t → th)</div>
+  </div>
+
+  <div class="qc" id="bq9"><div class="qn">9 / 14</div>
+    <div class="qs"><span class="sa">Is duine é sin.</span><br><span class="sb">Déanann sé a dhícheall i gcónaí.</span></div>
+    <div class="hint">Direct positive present — he = subject of déanann.</div>
+    <div class="tir"><input type="text" id="bq9-in" placeholder="Sin é an duine a..." onkeydown="if(event.key==='Enter')checkText('bq9','buildit',9)"><button class="bck" onclick="checkText('bq9','buildit',9)">Seiceáil</button></div>
+    <div class="fb" id="bq9-fb"></div><div class="ar" id="bq9-rev">Answer: <span>Sin é an duine <strong>a dhéanann</strong> a dhícheall i gcónaí.</span> — a + séimhiú (d → dh)</div>
+  </div>
+
+  <div class="qc" id="bq10"><div class="qn">10 / 14</div>
+    <div class="qs"><span class="sa">Is bean í.</span><br><span class="sb">Ní chreidim focal <u>uaithi</u>.</span></div>
+    <div class="hint">Indirect prep negative, present — "uaithi" (from her) refers back. nach + urú.</div>
+    <div class="tir"><input type="text" id="bq10-in" placeholder="Sin í an bhean nach..." onkeydown="if(event.key==='Enter')checkText('bq10','buildit',10)"><button class="bck" onclick="checkText('bq10','buildit',10)">Seiceáil</button></div>
+    <div class="fb" id="bq10-fb"></div><div class="ar" id="bq10-rev">Answer: <span>Sin í an bhean <strong>nach gcreideann</strong> mé focal <strong>uaithi</strong>.</span> — nach + urú (c → gc)</div>
+  </div>
+
+  <p class="sbh">Cleachtadh 2 — Cuid B</p>
+
+  <div class="qc" id="bq11"><div class="qn">11 / 14</div>
+    <div class="qs"><span class="sa">Sin an fear.</span><br><span class="sb">Bhí <u>a mhac</u> san otharlann.</span></div>
+    <div class="hint">Indirect genitive ("a mhac" = his son), past irregular — bhí (dependent: raibh).</div>
+    <div class="tir"><input type="text" id="bq11-in" placeholder="Sin é an fear a..." onkeydown="if(event.key==='Enter')checkText('bq11','buildit',11)"><button class="bck" onclick="checkText('bq11','buildit',11)">Seiceáil</button></div>
+    <div class="fb" id="bq11-fb"></div><div class="ar" id="bq11-rev">Answer: <span>Sin é an fear <strong>a raibh</strong> a mhac san otharlann.</span> — indirect genitive past irregular: a + urú (raibh — r unchanged)</div>
+  </div>
+
+  <div class="qc" id="bq12"><div class="qn">12 / 14</div>
+    <div class="qs"><span class="sa">Sin iad na mic léinn.</span><br><span class="sb">Tá <u>a gcuid pictiúr</u> ar taispeáint i Seomra na hEalaíne.</span></div>
+    <div class="hint">Indirect genitive ("a gcuid pictiúr" = their pictures), present.</div>
+    <div class="tir"><input type="text" id="bq12-in" placeholder="Sin iad na mic léinn a..." onkeydown="if(event.key==='Enter')checkText('bq12','buildit',12)"><button class="bck" onclick="checkText('bq12','buildit',12)">Seiceáil</button></div>
+    <div class="fb" id="bq12-fb"></div><div class="ar" id="bq12-rev">Answer: <span>Sin iad na mic léinn <strong>a bhfuil</strong> a gcuid pictiúr ar taispeáint i Seomra na hEalaíne.</span> — a + urú (fuil → bhfuil)</div>
+  </div>
+
+  <div class="qc" id="bq13"><div class="qn">13 / 14</div>
+    <div class="qs"><span class="sa">Ar chuala tú an scéal?</span><br><span class="sb">Bhí gach duine ag caint <u>faoi</u> ar maidin.</span></div>
+    <div class="hint">Indirect prep ("faoi" = about it), past — bhí is irregular (dependent: raibh).</div>
+    <div class="tir"><input type="text" id="bq13-in" placeholder="Ar chuala tú an scéal a..." onkeydown="if(event.key==='Enter')checkText('bq13','buildit',13)"><button class="bck" onclick="checkText('bq13','buildit',13)">Seiceáil</button></div>
+    <div class="fb" id="bq13-fb"></div><div class="ar" id="bq13-rev">Answer: <span>Ar chuala tú an scéal <strong>a raibh</strong> gach duine ag caint <strong>faoi</strong> ar maidin?</span> — indirect prep past irregular: a + urú (raibh)</div>
+  </div>
+
+  <div class="qc" id="bq14"><div class="qn">14 / 14</div>
+    <div class="qs"><span class="sa">Sin iad na daoine.</span><br><span class="sb">Chuaigh mé ar ollscoil <u>ina dteannta</u>.</span></div>
+    <div class="hint">Indirect prep ("ina dteannta"), past irregular — chuaigh (dependent: ndeachaigh).</div>
+    <div class="tir"><input type="text" id="bq14-in" placeholder="Sin iad na daoine a..." onkeydown="if(event.key==='Enter')checkText('bq14','buildit',14)"><button class="bck" onclick="checkText('bq14','buildit',14)">Seiceáil</button></div>
+    <div class="fb" id="bq14-fb"></div><div class="ar" id="bq14-rev">Answer: <span>Sin iad na daoine <strong>a ndeachaigh</strong> mé ar ollscoil <strong>ina dteannta</strong>.</span> — indirect prep past irregular: a + urú (deachaigh → ndeachaigh)</div>
+  </div>
+  <button class="rb-btn" onclick="resetSection('buildit')">↺ Reset</button>
+</div>
+
+<!-- TRANSLATE -->
+<div id="translate" class="tab-content">
+  <div class="sh"><h2>Section 4: Translate into Irish</h2><p>Cleachtadh 2, Cuid C — Work it out, then reveal the answer.</p></div>
+
+  <div class="trc"><div class="qn">1 / 10</div>
+    <div class="tren">Where is the money that was on that table?</div>
+    <div class="hint">Direct past — the money was on the table (it = subject). "cá bhfuil" + direct relative.</div>
+    <button class="trvb" onclick="toggleReveal('tr1')">Taispeáin freagra</button>
+    <div class="trva" id="tr1">Cá bhfuil an t-airgead <strong>a bhí</strong> ar an tábla sin?<div class="trn">Direct, past (bhí irregular — already lenited): a + séimhiú</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">2 / 10</div>
+    <div class="tren">The professor who gave the speech last night will speak to the class today.</div>
+    <div class="hint">Direct past — the professor gave the speech (subject). Irregular verb tabhair → thug.</div>
+    <button class="trvb" onclick="toggleReveal('tr2')">Taispeáin freagra</button>
+    <div class="trva" id="tr2">Labhróidh an t-ollamh <strong>a thug</strong> an óráid aréir leis an rang inniu.<div class="trn">Direct, past irregular (thug = past of tabhair): a + séimhiú</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">3 / 10</div>
+    <div class="tren">The boy to whom I gave the phone message forgot to leave a note.</div>
+    <div class="hint">Indirect prep — "dó" (to him) refers back to the boy. Past, regular verb tabhair → thug.</div>
+    <button class="trvb" onclick="toggleReveal('tr3')">Taispeáin freagra</button>
+    <div class="trva" id="tr3">Rinne an buachaill <strong>ar thug</strong> mé an teachtaireacht fóin <strong>dó</strong> dearmad nóta a fhágáil.<div class="trn">Indirect prep, past regular: <strong>ar</strong> + séimhiú (tug → thug)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">4 / 10</div>
+    <div class="tren">That's the mobile phone I want for my birthday.</div>
+    <div class="hint">"I want" = "tá uaim" — the phone is what I want (prep "uaim" = from me/I want). Indirect prep, present.</div>
+    <button class="trvb" onclick="toggleReveal('tr4')">Taispeáin freagra</button>
+    <div class="trva" id="tr4">Sin é an fón póca <strong>a bhfuil</strong> uaim do mo lá breithe.<div class="trn">Indirect prep, present: a + urú (fuil → bhfuil)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">5 / 10</div>
+    <div class="tren">This is the way she prepares her lesson plans.</div>
+    <div class="hint">"an dóigh" triggers an INDIRECT relative clause. Present tense.</div>
+    <button class="trvb" onclick="toggleReveal('tr5')">Taispeáin freagra</button>
+    <div class="trva" id="tr5">Sin é an dóigh <strong>a n-ullmhaíonn</strong> sí a cuid pleananna ceachta.<div class="trn">Indirect (an dóigh = indirect trigger), present: a + urú (u → n-u)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">6 / 10</div>
+    <div class="tren">Which year did they move back to Ireland?</div>
+    <div class="hint">"Cén bhliain" + direct relative. Past, irregular — fill → d'fhill.</div>
+    <button class="trvb" onclick="toggleReveal('tr6')">Taispeáin freagra</button>
+    <div class="trva" id="tr6">Cén bhliain <strong>a d'fhill</strong> siad ar Éirinn?<div class="trn">Direct future, verb beginning with vowel/f: keep d'/d'fh as-is after "a"</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">7 / 10</div>
+    <div class="tren">Here's the girl whose mother won first prize in the school draw.</div>
+    <div class="hint">Indirect genitive — "a máthair" (her mother). Past, regular verb buaigh.</div>
+    <button class="trvb" onclick="toggleReveal('tr7')">Taispeáin freagra</button>
+    <div class="trva" id="tr7">Seo í an cailín <strong>ar bhuaigh</strong> a máthair an chéad duais i gcrannchur na scoile.<div class="trn">Indirect genitive, past regular: <strong>ar</strong> + séimhiú (buaigh → bhuaigh)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">8 / 10</div>
+    <div class="tren">The woman whom I spoke to told me that you lived here.</div>
+    <div class="hint">Indirect prep — "léi" (with/to her). Past, regular verb labhair.</div>
+    <button class="trvb" onclick="toggleReveal('tr8')">Taispeáin freagra</button>
+    <div class="trva" id="tr8">Dúirt an bhean <strong>ar labhair</strong> mé <strong>léi</strong> liom go raibh tú i do chónaí anseo.<div class="trn">Indirect prep, past regular: <strong>ar</strong> + séimhiú (labhair — l unchanged here, but ar is the key marker)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">9 / 10</div>
+    <div class="tren">He arrived home last night at eight o'clock, which surprised us all greatly.</div>
+    <div class="hint">Use "rud a" (a thing which) when the whole preceding clause is the antecedent.</div>
+    <button class="trvb" onclick="toggleReveal('tr9')">Taispeáin freagra</button>
+    <div class="trva" id="tr9">Tháinig sé abhaile aréir ar a hocht a chlog, <strong>rud a chuir</strong> iontas mór orainn go léir.<div class="trn">"rud a" = a thing which — the whole clause is the antecedent. Direct, past regular: a + séimhiú (cuir → chuir)</div></div>
+  </div>
+
+  <div class="trc"><div class="qn">10 / 10</div>
+    <div class="tren">Show me the girl whose mother doesn't go out to work.</div>
+    <div class="hint">Indirect genitive negative, present — "a máthair". Irregular verb téigh → dtéann.</div>
+    <button class="trvb" onclick="toggleReveal('tr10')">Taispeáin freagra</button>
+    <div class="trva" id="tr10">Taispeáin dom an cailín <strong>nach dtéann</strong> a máthair amach ag obair.<div class="trn">Indirect genitive negative, present: <strong>nach</strong> + urú (téann → dtéann)</div></div>
+  </div>
+</div>
+
+<script>
+const scores  = { identify:0, particle:0, buildit:0 };
+const totals  = { identify:10, particle:7, buildit:14 };
+const answered = {};
+
+function updateScore(section, qid, correct) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  if (correct) scores[section]++;
+  document.getElementById(section+'-score').textContent = scores[section]+' / '+totals[section];
+  const num = parseInt(qid.replace(/\D/g,''));
+  const dot = document.getElementById(section+'-d'+num);
+  if (dot) dot.classList.add(correct ? 'ok' : 'no');
+}
+
+function checkMC(cardId, chosen, correct, section, num) {
+  if (answered[cardId]) return;
+  const card = document.getElementById(cardId);
+  const isOk = chosen === correct;
+  updateScore(section, cardId, isOk);
+  card.querySelectorAll('.mb').forEach(b => {
+    b.disabled = true;
+    if (b.textContent.trim() === correct) b.classList.add('ca');
+    if (b.textContent.trim() === chosen && !isOk) b.classList.add('wa');
+  });
+  const fb = document.getElementById(cardId+'-fb');
+  const rev = document.getElementById(cardId+'-rev');
+  if (isOk) { fb.textContent='✓ Ceart!'; fb.className='fb ok'; card.classList.add('correct'); }
+  else       { fb.textContent='✗ Mícheart.'; fb.className='fb no'; card.classList.add('incorrect'); }
+  if (rev) rev.classList.add('show');
+}
+
+function norm(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[?.!,]/g,'').replace(/\s+/g,' ').trim();
+}
+
+const ans = {
+  bq1:  ['sin iad na ceoltóirí a bhain an chéad duais sa chomórtas'],
+  bq2:  ['chonaic mé an siopa a mbíonn micheál ag obair ann'],
+  bq3:  ['sin í an bhean a bhfuil mo dheirfiúr ina cónaí léi'],
+  bq4:  ["sin í m'aintín nach bhfeicim rómhinic","sin í m'aintín nach bhfeicim romhinic i"],
+  bq5:  ['sin é an fear a bhfaca seán a charr sa chlós'],
+  bq6:  ['sin é an fear a mbíodh a bhean chéile i bhfeighil an tsiopa tráth','sin fear a mbíodh a bhean chéile i bhfeighil an tsiopa tráth'],
+  bq7:  ['an é sin an gasúr a fhaigheann na páipéir gach maidin'],
+  bq8:  ['cén uair a thiocfaidh sí inniu'],
+  bq9:  ['sin é an duine a dhéanann a dhícheall i gcónaí','is duine é sin a dhéanann a dhícheall i gcónaí'],
+  bq10: ['sin í an bhean nach gcreideann mé focal uaithi','is bean í nach gcreideann mé focal uaithi'],
+  bq11: ['sin é an fear a raibh a mhac san otharlann','sin an fear a raibh a mhac san otharlann'],
+  bq12: ['sin iad na mic léinn a bhfuil a gcuid pictiúr ar taispeáint i seomra na healaíne','sin iad na mic léinn a bhfuil a gcuid pictiúr ar taispeáint'],
+  bq13: ['ar chuala tú an scéal a raibh gach duine ag caint faoi ar maidin'],
+  bq14: ['sin iad na daoine a ndeachaigh mé ar ollscoil ina dteannta'],
+};
+
+function checkText(cardId, section, num) {
+  if (answered[cardId]) return;
+  const inp = document.getElementById(cardId+'-in');
+  if (!inp.value.trim()) return;
+  const isOk = ans[cardId].some(a => norm(a) === norm(inp.value));
+  updateScore(section, cardId, isOk);
+  const fb = document.getElementById(cardId+'-fb');
+  const rev = document.getElementById(cardId+'-rev');
+  const card = document.getElementById(cardId);
+  inp.disabled = true;
+  card.querySelector('.bck').disabled = true;
+  if (isOk) { inp.classList.add('ci'); fb.textContent='✓ Ceart!'; fb.className='fb ok'; card.classList.add('correct'); }
+  else       { inp.classList.add('ii'); fb.textContent='✗ Mícheart. Féach ar an fhreagra thíos.'; fb.className='fb no'; card.classList.add('incorrect'); }
+  if (rev) rev.classList.add('show');
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleReveal(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('show');
+  el.previousElementSibling.textContent = el.classList.contains('show') ? 'Ceil freagra' : 'Taispeáin freagra';
+}
+
+const secQs = {
+  identify: ['iq1','iq2','iq3','iq4','iq5','iq6','iq7','iq8','iq9','iq10'],
+  particle: ['pq1','pq2','pq3','pq4','pq5','pq6','pq7'],
+  buildit:  ['bq1','bq2','bq3','bq4','bq5','bq6','bq7','bq8','bq9','bq10','bq11','bq12','bq13','bq14'],
+};
+
+function resetSection(section) {
+  scores[section] = 0;
+  document.getElementById(section+'-score').textContent = '0 / '+totals[section];
+  secQs[section].forEach((qid,i) => {
+    delete answered[qid];
+    const card = document.getElementById(qid);
+    if (!card) return;
+    card.classList.remove('correct','incorrect');
+    const dot = document.getElementById(section+'-d'+(i+1));
+    if (dot) dot.classList.remove('ok','no');
+    const fb = document.getElementById(qid+'-fb');
+    if (fb) { fb.textContent=''; fb.className='fb'; }
+    const rev = document.getElementById(qid+'-rev');
+    if (rev) rev.classList.remove('show');
+    card.querySelectorAll('.mb').forEach(b => { b.disabled=false; b.classList.remove('ca','wa'); });
+    const inp = card.querySelector('input');
+    if (inp) { inp.value=''; inp.disabled=false; inp.classList.remove('ci','ii'); }
+    const bck = card.querySelector('.bck');
+    if (bck) bck.disabled=false;
+  });
+}
+</script>
+</body>
+</html>
